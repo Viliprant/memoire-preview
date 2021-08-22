@@ -1,5 +1,5 @@
 module.exports = {
-    'DB': 'DB',
+    'DB': 'Database',
     'SERVICE': 'Service',
     'SERVER': 'Server'
 };

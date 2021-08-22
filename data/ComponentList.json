@@ -3,43 +3,43 @@
         {
             "id": "1",
             "type": "Database",
-            "state": "OK",
+            "state": "Running",
             "name": "DB1"
         },
         {
             "id": "2",
             "type": "Database",
-            "state": "OK",
+            "state": "Running",
             "name": "DB2"
         },
         {
             "id": "3",
             "type": "Server",
-            "state": "OK",
+            "state": "Running",
             "name": "Server1"
         },
         {
             "id": "4",
             "type": "Server",
-            "state": "OK",
+            "state": "Running",
             "name": "Server2"
         },
         {
             "id": "5",
             "type": "Server",
-            "state": "OK",
+            "state": "STOPPED",
             "name": "Server3"
         },
         {
             "id": "6",
             "type": "Service",
-            "state": "OK",
+            "state": "Running",
             "name": "Service1"
         },
         {
             "id": "7",
             "type": "Service",
-            "state": "OK",
+            "state": "Running",
             "name": "Service2"
         }
     ]

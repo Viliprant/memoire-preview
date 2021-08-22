@@ -1,7 +1,7 @@
-const IComponent = require('./interfaces/IComponent')
+const Component = require('../../classes/Component')
 const TYPES = require('../enums/Types')
 
-class Server extends IComponent{
+class Server extends Component{
     constructor(id, state, name){
         super(id, TYPES.SERVER, state, name)
     }

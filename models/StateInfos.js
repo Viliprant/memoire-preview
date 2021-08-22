@@ -1,11 +1,13 @@
 class StateInfos{
-    constructor(id, idComponent, type, message, state, priority){
-        this.id
-        this.idComponent
-        this.type
-        this.state
-        this.priority
-        this.message
+    static id = 1
+
+    constructor(id, idComponent, type, message, status, priority){
+        this.id = id || StateInfos.id
+        this.idComponent = idComponent
+        this.type = type
+        this.status = status
+        this.priority = priority
+        this.message = message
     }
 }
 

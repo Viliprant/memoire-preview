@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Monitoring = require('../classes/monitoring')
+const Monitoring = require('../classes/Monitoring')
 
 Monitoring.Init();
 
