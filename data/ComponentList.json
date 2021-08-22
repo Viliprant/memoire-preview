@@ -1,0 +1,46 @@
+{
+    "Components": [
+        {
+            "id": "1",
+            "type": "Database",
+            "state": "OK",
+            "name": "DB1"
+        },
+        {
+            "id": "2",
+            "type": "Database",
+            "state": "OK",
+            "name": "DB2"
+        },
+        {
+            "id": "3",
+            "type": "Server",
+            "state": "OK",
+            "name": "Server1"
+        },
+        {
+            "id": "4",
+            "type": "Server",
+            "state": "OK",
+            "name": "Server2"
+        },
+        {
+            "id": "5",
+            "type": "Server",
+            "state": "OK",
+            "name": "Server3"
+        },
+        {
+            "id": "6",
+            "type": "Service",
+            "state": "OK",
+            "name": "Service1"
+        },
+        {
+            "id": "7",
+            "type": "Service",
+            "state": "OK",
+            "name": "Service2"
+        }
+    ]
+}
