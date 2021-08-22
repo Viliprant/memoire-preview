@@ -3,25 +3,25 @@
         {
             "id": "1",
             "type": "Database",
-            "state": "Running",
+            "state": "RUNNING",
             "name": "DB1"
         },
         {
             "id": "2",
             "type": "Database",
-            "state": "Running",
+            "state": "RUNNING",
             "name": "DB2"
         },
         {
             "id": "3",
             "type": "Server",
-            "state": "Running",
+            "state": "RUNNING",
             "name": "Server1"
         },
         {
             "id": "4",
             "type": "Server",
-            "state": "Running",
+            "state": "RUNNING",
             "name": "Server2"
         },
         {
@@ -33,13 +33,13 @@
         {
             "id": "6",
             "type": "Service",
-            "state": "Running",
+            "state": "TIMEOUT",
             "name": "Service1"
         },
         {
             "id": "7",
             "type": "Service",
-            "state": "Running",
+            "state": "RUNNING",
             "name": "Service2"
         }
     ]

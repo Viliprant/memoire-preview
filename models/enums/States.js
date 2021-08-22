@@ -1,4 +1,4 @@
 module.exports = {
-    'RUNNING': 'Running',
-    'STOPPED': 'Stopped'
+    'RUNNING': 'RUNNING',
+    'TIMEOUT': 'TIMEOUT'
 };
