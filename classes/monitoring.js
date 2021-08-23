@@ -4,9 +4,11 @@ const Server = require('../models/components/Server');
 const Service = require('../models/components/Service');
 const TYPES = require('../models/enums/Types');
 const STATES = require('../models/enums/States')
+const PRIORITIES = require('../models/enums/Priorities')
+const STATUS = require('../models/enums/Status')
 const Logger = require('../utils/Logger');
-
-
+const StateInfos = require('../models/StateInfos');
+const { setInterval } = require('timers');
 
 class Monitoring {
     static components = []
@@ -20,54 +22,111 @@ class Monitoring {
             const components = JSON.parse(rawdata).Components;
 
             components.forEach(component => {
+
                 switch (component.type) {
                     case TYPES.DB:
-                        Monitoring.components.push(new Database(component.id, component.state, component.name));
-                        Logger.Success(`${component.name} [${component.type.toUpperCase()}] added to the monitoring`);
+                        const db = new Database(component.id, component.state, component.name);
+                        Monitoring.components.push(db);
+                        db.interval =  Monitoring.ReceiveFakeData(db);
                         break;
                     case TYPES.SERVER:
-                        Monitoring.components.push(new Server(component.id, component.state, component.name));
-                        Logger.Success(`${component.name} [${component.type.toUpperCase()}] added to the monitoring`);
+                        const server = new Server(component.id, component.state, component.name);
+                        Monitoring.components.push(server);
+                        server.interval =  Monitoring.ReceiveFakeData(server);
                         break;
                     case TYPES.SERVICE:
-                        Monitoring.components.push(new Service(component.id, component.state, component.name));
-                        Logger.Success(`${component.name} [${component.type.toUpperCase()}] added to the monitoring`);
+                        const service = new Service(component.id, component.state, component.name);
+                        Monitoring.components.push(service);
+                        service.interval =  Monitoring.ReceiveFakeData(service);
                         break;
                 
                     default:
-                        Logger.Error(`${component.name} [${component.type.toUpperCase()}] : type is unknown`);
+                        const stateInfos = new StateInfos(null, component.id, component.name, component.type, 'BEATS', `UNKNOWN TYPE`, STATUS.KO, PRIORITIES.HIGH);
+                        Monitoring.SendToListeners(stateInfos);
                         break;
                 }
                 
-                Monitoring.interval = setInterval(Monitoring.AskStatus, 5000);
+                Monitoring.interval = setInterval(Monitoring.AskStatus, 30 * 1000);
             });
         } catch (error) {
             Logger.Error('Impossible de lire le json');
-            Logger.Error(error);
+            console.log(error);
         }
 
         Logger.Info('Monitoring is started !');
     }
 
-    static AskStatus = () => {
+    static AskStatus = async () => {
         Monitoring.components.forEach(component => {
-            // TODO : Envoyer aux listeners / clients!
+            const stateInfos = new StateInfos(null, component.id, component.name, component.type, 'BEATS', '', STATUS.OK, PRIORITIES.LOW);
+
             switch (component.state) {
                 case STATES.RUNNING:
-                    // TODO : utiliser la classe StateInfos
-                    Logger.Info(`${component.name} [${component.type.toUpperCase()}] : ${STATES.RUNNING}`);
+                    stateInfos.message = `${STATES.RUNNING}`;
                     break;
                 case STATES.TIMEOUT:
-                    // TODO : utiliser la classe StateInfos
-                    Logger.Error(`${component.name} [${component.type.toUpperCase()}] : ${STATES.TIMEOUT}`);
+                    stateInfos.message = `${STATES.TIMEOUT}`;
+                    stateInfos.priority = PRIORITIES.HIGH;
+                    stateInfos.status = STATUS.KO;
                     break;
 
                 default:
-                    Logger.Warning(`${component.name} [${component.type.toUpperCase()}] unknown status : ${component.state}`);
+                    stateInfos.message = `UNKNOWN STATUS : ${component.state}`;
+                    stateInfos.priority = PRIORITIES.MEDIUM;
+                    stateInfos.status = STATUS.KO;
                     break;
-            }
+                }
+                
+            Monitoring.SendToListeners(stateInfos);
         });
     }
+
+    static SendToListeners(stateInfos){
+        if(stateInfos){
+            if(stateInfos instanceof StateInfos){
+               if(stateInfos.status == STATUS.KO){
+                   if(stateInfos.priority == PRIORITIES.HIGH){
+                       Logger.Error(stateInfos.toString());
+                   }
+                   else{
+                       Logger.Warning(stateInfos.toString())
+                   }
+               }
+               else{
+                    if(stateInfos.priority == PRIORITIES.HIGH){
+                        Logger.Success(stateInfos.toString());
+                    }
+                    else{
+                        Logger.Info(stateInfos.toString());
+                    }
+               }
+               // TODO : ENVOYER AUX LISTENERS
+
+            }
+            else{
+                Logger.Warning('Using [SendToListeners] with wrong type parameter [stateInfos]');
+            }
+        }
+        else{
+            Logger.Warning('Using [SendToListeners] with null parameter [stateInfos]');
+        }
+    }
+
+    static ReceiveFakeData = async (component) => {
+        if(component.GenerateFakeLogs){
+            setInterval(() => {
+                const stateInfos = component.GenerateFakeLogs();
+            
+                if(stateInfos){
+                    Monitoring.SendToListeners(stateInfos);
+                }
+            }, 10 * 1000);
+        }
+        else{
+            Logger.Warning('Using [ReceiveFakeData] with parameter without [GenerateFakeLogs] function');
+        }
+    }
+    
 }
 
 module.exports = Monitoring;

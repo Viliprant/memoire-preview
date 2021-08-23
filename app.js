@@ -17,7 +17,7 @@ app.use('/monitoring', monitoringRouter);
 
 //Errors
 app.use((err, req, res, next) => {
-    res.status(500).send({ error: 'Something failed!' });
+    res.status(500).send({ error: err.message });
 })
 
 app.use((req, res) => {
